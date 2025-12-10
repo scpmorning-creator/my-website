@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Мой сайт</title>
+</head>
+<body>
+<h1>Скачайте архив</h1>
+<button onclick="downloadFile()">Скачать архив с Google Диска</button>
+
+<script>
+    function downloadFile() {
+        // Прямая ссылка на скачивание с Google Диска
+        const downloadURL = 'https://drive.google.com/uc?export=download&id=1npb3G5-PeM9OQhYX3PGvHYjhuK02mdEf';
+
+        // Создаём временную ссылку для скачивания
+        const a = document.createElement('a');
+        a.style.display = 'none'; // Скрываем элемент
+        a.href = downloadURL;
+        a.download = 'archive.zip'; // Имя файла при сохранении
+        document.body.appendChild(a);
+        a.click(); // Эмулируем клик
+        document.body.removeChild(a); // Удаляем элемент после клика
+    }
+    console.log("Сайт загружен");
+</script>
+</body>
+</html>
