@@ -1,27 +1,320 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Мой сайт</title>
+    <meta charset="UTF-8" />
+    <title>Laboratory 0.1</title>
+    <!-- Иконка сайта (favicon) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🔽</text></svg>" type="image/svg+xml">
+    <style>
+        /* === Тёмная тема === */
+        :root {
+            --bg-primary: #0f0f15;
+            --bg-secondary: #1a1a2e;
+            --text-primary: #e0e0e0;
+            --text-secondary: #aaaaaa;
+            --accent: #bb86fc;
+            --accent-hover: #9b69d8;
+            --card-bg: rgba(30, 30, 30, 0.7);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            cursor: default;
+        }
+
+        /* === Фон: анимированные световые пятна, частицы и звёзды === */
+        .light-spot {
+            position: absolute;
+            background: radial-gradient(circle, rgba(187, 134, 252, 0.25), transparent 70%);
+            border-radius: 50%;
+            opacity: 0.4;
+            filter: blur(1px);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .spot-small  { width: 60px;  height: 60px;  opacity: 0.2; }
+        .spot-medium { width: 150px; height: 150px; opacity: 0.25; }
+        .spot-large  { width: 300px; height: 300px; opacity: 0.15; }
+
+        /* Анимации света */
+        @keyframes float {
+            0%   { transform: translate(-50%, -50%) translate(0, 0) rotate(0deg); }
+            25%  { transform: translate(-50%, -50%) translate(15px, -20px) rotate(90deg); }
+            50%  { transform: translate(-50%, -50%) translate(-15px, 20px) rotate(180deg); }
+            75%  { transform: translate(-50%, -50%) translate(20px, 15px) rotate(270deg); }
+            100% { transform: translate(-50%, -50%) translate(0, 0) rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.15; }
+            50% { opacity: 0.4; }
+        }
+
+        .spot-small  { animation: float 10s infinite ease-in-out, pulse 2.5s infinite alternate; }
+        .spot-medium { animation: float 15s infinite ease-in-out, pulse 3.5s infinite alternate; }
+        .spot-large  { animation: float 20s infinite ease-in-out, pulse 5s infinite alternate; }
+
+        /* Дополнительные детали: звёзды */
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            pointer-events: none;
+            z-index: 0;
+            box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+        }
+
+        .star.tiny   { width: 1px; height: 1px; animation: twinkle 2s infinite; }
+        .star.small  { width: 2px; height: 2px; animation: twinkle 3s infinite; }
+        .star.medium { width: 3px; height: 3px; animation: twinkle 4s infinite; }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.9; }
+        }
+
+        /* Лёгкие полосы (как следы света) */
+        .glow-line {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                    45deg,
+                    transparent 0%,
+                    rgba(187, 134, 252, 0.03) 20%,
+                    transparent 40%
+            );
+            background-size: 200% 200%;
+            z-index: 0;
+            pointer-events: none;
+            animation: slide 15s linear infinite;
+        }
+
+        @keyframes slide {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 200%; }
+        }
+
+        /* Контейнер поверх фона */
+        .container {
+            text-align: center;
+            background: var(--card-bg);
+            padding: 50px 60px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            max-width: 500px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: logoPulse 2s infinite;
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        h1 {
+            color: var(--accent);
+            font-size: 2.2em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        button {
+            padding: 16px 32px;
+            font-size: 1.2em;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(187, 134, 252, 0.4);
+            font-weight: 600;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 10px 25px rgba(187, 134, 252, 0.6);
+            background: var(--accent-hover);
+        }
+
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Прогресс-бар с таймером */
+        .progress-container {
+            margin-top: 25px;
+            display: none;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            height: 10px;
+            position: relative;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #00c853, #64dd17);
+            border-radius: 10px;
+            transition: width 0.1s linear;
+        }
+
+        .progress-text {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .container {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body>
-<h1>Скачайте архив</h1>
-<button onclick="downloadFile()">Скачать архив с Google Диска</button>
+<!-- Фоновые эффекты -->
+<div class="glow-line"></div>
+
+<!-- Световые пятна -->
+<div class="light-spot spot-small" style="top: 15%; left: 20%;"></div>
+<div class="light-spot spot-medium" style="top: 70%; left: 10%;"></div>
+<div class="light-spot spot-large" style="top: 50%; left: 50%;"></div>
+<div class="light-spot spot-small" style="top: 80%; left: 60%;"></div>
+<div class="light-spot spot-medium" style="top: 30%; left: 75%;"></div>
+<div class="light-spot spot-large" style="top: 10%; left: 50%;"></div>
+<div class="light-spot spot-small" style="top: 40%; left: 30%;"></div>
+
+<!-- Звёзды -->
+<script>
+    // Генерация случайных звёзд
+    for (let i = 0; i < 100; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        const size = Math.random() > 0.7 ? (Math.random() > 0.5 ? 'medium' : 'small') : 'tiny';
+        star.classList.add(size);
+
+        // Случайное позиционирование
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.left = `${Math.random() * 100}%`;
+
+        // Разная анимация
+        star.style.animationDelay = `${Math.random() * 5}s`;
+        document.body.appendChild(star);
+    }
+</script>
+
+<!-- Основной контент -->
+<div class="container">
+    <div class="logo">🔽</div>
+    <h1>Скачайте архив</h1>
+    <p>Нажмите кнопку, чтобы начать скачивание</p>
+    <button id="downloadBtn" onclick="downloadFile()">Скачать архив</button>
+    <div class="progress-container" id="progressContainer">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="progress-text" id="progressText">Подготовка...</div>
+</div>
 
 <script>
     function downloadFile() {
-        // Прямая ссылка на скачивание с Google Диска
-        const downloadURL = 'https://drive.google.com/uc?export=download&id=1npb3G5-PeM9OQhYX3PGvHYjhuK02mdEf';
+        const button = document.getElementById('downloadBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
 
-        // Создаём временную ссылку для скачивания
-        const a = document.createElement('a');
-        a.style.display = 'none'; // Скрываем элемент
-        a.href = downloadURL;
-        a.download = 'archive.zip'; // Имя файла при сохранении
-        document.body.appendChild(a);
-        a.click(); // Эмулируем клик
-        document.body.removeChild(a); // Удаляем элемент после клика
+        // Блокировка кнопки
+        button.disabled = true;
+        button.textContent = 'Скачивание...';
+
+        // Показ прогресса
+        progressContainer.style.display = 'block';
+        progressText.textContent = 'Оценка размера...';
+
+        // Имитация задержки (обычно здесь был бы fetch с Content-Length)
+        setTimeout(() => {
+            progressText.textContent = 'Скачивание: 0%';
+            let downloaded = 0;
+            const total = 100;
+            const timePerPercent = 100; // 100 мс на 1% → 10 секунд
+            const startTime = Date.now();
+
+            const interval = setInterval(() => {
+                downloaded++;
+                progressBar.style.width = downloaded + '%';
+                const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+                progressText.textContent = `Скачивание: ${downloaded}% (время: ${elapsed} с)`;
+
+                if (downloaded >= total) {
+                    clearInterval(interval);
+
+                    // Завершение скачивания
+                    const downloadURL = 'https://drive.google.com/uc?export=download&id=1npb3G5-PeM9OQhYX3PGvHYjhuK02mdEf';
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = downloadURL;
+                    a.download = 'archive.zip';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+
+                    progressText.textContent = 'Готово!';
+
+                    // Сброс через 1.5 сек
+                    setTimeout(() => {
+                        progressContainer.style.display = 'none';
+                        button.disabled = false;
+                        button.textContent = 'Скачать архив';
+                    }, 1500);
+                }
+            }, timePerPercent);
+        }, 800);
     }
-    console.log("Сайт загружен");
 </script>
 </body>
 </html>
