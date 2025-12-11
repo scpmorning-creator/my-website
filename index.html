@@ -294,14 +294,15 @@
                     clearInterval(interval);
 
                     // Завершение скачивания
-                    const downloadURL = 'https://drive.google.com/uc?export=download&id=1npb3G5-PeM9OQhYX3PGvHYjhuK02mdEf';
-                    const a = document.createElement('a');
-                    a.style.display = 'none';
-                    a.href = downloadURL;
-                    a.download = 'archive.zip';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
+                    const downloadURL = '/archive.zip';
+const a = document.createElement('a');
+a.style.display = 'none';
+a.href = downloadURL;
+a.download = 'archive.zip';
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+
 
                     progressText.textContent = 'Готово!';
 
@@ -318,3 +319,4 @@
 </script>
 </body>
 </html>
+
